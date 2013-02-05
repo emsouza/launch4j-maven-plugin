@@ -1,16 +1,14 @@
 package br.com.emsouza.plugin.launch4j;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineTimeOutException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.cli.StreamConsumer;
+
+import br.com.emsouza.plugin.launch4j.util.JavaCommand;
 
 /**
  * Wraps a jar in a Windows executable.
@@ -19,8 +17,6 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
  * @phase package
  */
 public class Launch4jMojo extends AbstractMojo {
-
-	private static final String LAUNCH4J = "launch4jc";
 
 	/**
 	 * The base of the current project.
@@ -45,26 +41,6 @@ public class Launch4jMojo extends AbstractMojo {
 	 */
 	private String launch4jConfig;
 
-	/**
-	 * A plexus-util StreamConsumer to redirect messages to plugin log
-	 */
-	protected StreamConsumer out = new StreamConsumer() {
-		@Override
-		public void consumeLine(String line) {
-			getLog().info(line);
-		}
-	};
-
-	/**
-	 * A plexus-util StreamConsumer to redirect errors to plugin log
-	 */
-	private StreamConsumer err = new StreamConsumer() {
-		@Override
-		public void consumeLine(String line) {
-			getLog().error(line);
-		}
-	};
-
 	@Override
 	public void execute() throws MojoExecutionException {
 		if (getLaunch4jAbsolutePath().exists()) {
@@ -73,22 +49,19 @@ public class Launch4jMojo extends AbstractMojo {
 				throw new MojoExecutionException("The launch4j config file '" + launch4jConfig + "' cannot be read");
 			} else {
 
-				try {
-					Commandline cmd = new Commandline();
+				List<File> path = new ArrayList<File>();
+				path.add(new File(launch4jDir, "launch4j.jar"));
+				path.add(new File(launch4jDir, "lib/xstream.jar"));
 
-					cmd.setWorkingDirectory(getLaunch4jAbsolutePath());
+				JavaCommand java = new JavaCommand(getLog(), "net.sf.launch4j.Main");
 
-					cmd.setExecutable(getCommand());
+				java.setBaseDir(launch4jDir);
 
-					cmd.addArguments(new String[] { getAbsoluteConfigFile() });
+				java.addClasspath(path);
 
-					CommandLineUtils.executeCommandLine(cmd, out, err);
+				java.arg(getAbsoluteConfigFile());
 
-				} catch (CommandLineTimeOutException e) {
-					throw new MojoExecutionException("Process Timeout.", e);
-				} catch (CommandLineException e) {
-					throw new MojoExecutionException("Process execution error.", e);
-				}
+				java.execute();
 			}
 
 		} else {
@@ -102,9 +75,5 @@ public class Launch4jMojo extends AbstractMojo {
 
 	private String getAbsoluteConfigFile() {
 		return new File(basedir, launch4jConfig).getAbsolutePath();
-	}
-
-	private String getCommand() {
-		return Os.isFamily(Os.FAMILY_WINDOWS) ? LAUNCH4J + ".exe" : LAUNCH4J;
 	}
 }
