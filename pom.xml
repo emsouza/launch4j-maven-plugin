@@ -4,7 +4,7 @@
 	<groupId>br.com.emsouza.plugin</groupId>
 	<artifactId>launch4j-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>1.3</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>Maven Launch4j Plugin</name>
 
 	<properties>
@@ -40,13 +40,12 @@
 		</dependency>
 	</dependencies>
 
-	<distributionManagement>
-		<repository>
-			<id>digitro.libs</id>
-			<url>http://192.168.167.36/archiva/repository/digitro.libs</url>
-			<uniqueVersion>false</uniqueVersion>
-		</repository>
-	</distributionManagement>
+	<scm>
+		<connection>scm:git:https://github.com/emsouza/launch4j-maven-plugin.git</connection>
+		<url>scm:git:https://github.com/emsouza/launch4j-maven-plugin.git</url>
+		<developerConnection>scm:git:https://github.com/emsouza/launch4j-maven-plugin.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
 
 	<build>
 		<plugins>
