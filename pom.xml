@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.emsouza.plugin</groupId>
 	<artifactId>launch4j-maven-plugin</artifactId>
@@ -44,7 +45,6 @@
 		<connection>scm:git:https://github.com/emsouza/launch4j-maven-plugin.git</connection>
 		<url>scm:git:https://github.com/emsouza/launch4j-maven-plugin.git</url>
 		<developerConnection>scm:git:https://github.com/emsouza/launch4j-maven-plugin.git</developerConnection>
-		<tag>HEAD</tag>
 	</scm>
 
 	<build>
@@ -53,18 +53,20 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>2.5.1</version>
 				<configuration>
-					<source>${project.compile.version}</source>
-					<target>${project.compile.version}</target>
-					<meminitial>64m</meminitial>
-					<maxmem>256m</maxmem>
-					<fork>true</fork>
-					<compilerArgument>-XDignore.symbol.file</compilerArgument>
-					<encoding>${project.build.sourceEncoding}</encoding>
-					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
+				<inherited>true</inherited>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+
 		</plugins>
 	</build>
 
